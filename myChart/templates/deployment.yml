@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tutorial-deployment
+  labels:
+    app: django-pg-docker-tutorial
+spec:
+  selector:
+    app: django-pg-docker-tutorial
+
+  template:
+    metadata:
+      labels:
+        app: django-pg-docker-tutorial
+    spec:
+      replicas: {{values.replicas}}
+      containers:
+        - name: db
+          image: postgres:13-alpine
+          ports:
+            - containerPort: {{values.db.containerPort}}
+            - hostPort: {{values.db.hostPort}}
+          env:
+            - name: POSTGRES_DB
+              value: {{values.env.tutorial-dev}}
+            - name: POSTGRES_USER
+              value: {{values.env.vinhle}}
+            - name: POSTGRES_PASSWORD
+              value: {{values.env.password}}
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: tutorial-data
+
+        - name: app
+          image: pg-docker-tutorial:1.0
+          ports:
+            - containerPort: {{values.app.containerPort}}
+            - hostPort: {{values.app.hostPort}}
+          env:
+            - name: DB_HOST
+              value: {{values.env.DB_HOST}}
+            - name: DB_NAME
+              value: {{values.env.DB_NAME}}
+            - name: DB_PASS
+              value: {{values.env.DB_PASS}}
+            - name: DB_USER
+              value: {{values.env.DB_USER}}
+          - args:
+            - sh
+            - -c
+            - python manage.py migrate && python manage.py runserver 0.0.0.0:{{values.containerPort}}
+          volumeMounts:
+            - mountPath: /app
+              name: tutorial-data
+
+      volumes:
+        - name: tutorial-data
+          persistentVolumeClaim:
+            claimName: tutorial-volume
+        - name: app-data
+          persistentVolumeClaim:
+            claimName: app-volume
+        

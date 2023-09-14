@@ -1,0 +1,4 @@
+---
+apiVersion: v2
+name: django-pg-docker-tutorial
+version: 1.0.0

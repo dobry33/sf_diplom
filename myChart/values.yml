@@ -1,0 +1,17 @@
+replicas: 1
+env:
+  POSTGRES_DB: tutorial-dev
+  POSTGRES_USER: vinhle
+  POSTGRES_PASSWORD: password
+  DB_HOST: db
+  DB_NAME: tutorial-dev
+  DB_PASS: password
+  DB_USER: vinhle
+
+app:
+  containerPort: 3003
+  hostPort: 3003
+
+db:
+  containerPort: 5432
+  hostPort: 5432
