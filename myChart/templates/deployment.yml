@@ -1,17 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tutorial-deployment
+  name: {{ .Release.Name }}-deployment
   labels:
-    app: django-pg-docker-tutorial
+    app: {{ .Release.Name }}
+    component: {{ .Release.Namespace }}
+    release: {{ .Release.Name }}
 spec:
   selector:
-    app: django-pg-docker-tutorial
+    app: {{ .Release.Name }}
+    component: {{ .Release.Namespace }}
+    release: {{ .Release.Name }}
 
   template:
     metadata:
       labels:
-        app: django-pg-docker-tutorial
+        app: {{ .Release.Name }}
+        component: {{ .Release.Namespace }}
+        release: {{ .Release.Name }}
     spec:
       replicas: {{values.replicas}}
       containers:
@@ -32,7 +38,7 @@ spec:
               name: tutorial-data
 
         - name: app
-          image: pg-docker-tutorial:1.0
+          image: dobry33/pg-docker-tutorial:1.0
           ports:
             - containerPort: {{values.app.containerPort}}
             - hostPort: {{values.app.hostPort}}
