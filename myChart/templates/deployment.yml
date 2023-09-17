@@ -28,11 +28,11 @@ spec:
             - hostPort: {{values.db.hostPort}}
           env:
             - name: POSTGRES_DB
-              value: {{values.env.tutorial-dev}}
+              value: {{values.env.POSTGRES_DB}}
             - name: POSTGRES_USER
-              value: {{values.env.vinhle}}
+              value: {{values.env.POSTGRES_USER}}
             - name: POSTGRES_PASSWORD
-              value: {{values.env.password}}
+              value: {{values.env.POSTGRES_PASSWORD}}
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: tutorial-data
