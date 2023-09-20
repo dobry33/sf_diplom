@@ -10,8 +10,8 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: {{values.app.containerPort}}
-      targetPort: {{values.app.hostPort}}
+    - port: {{.Values.app.hostPort}}
+      targetPort: {{.Values.app.containerPort}}
       protocol: TCP
 
   selector:
