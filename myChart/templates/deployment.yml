@@ -21,8 +21,9 @@ spec:
         component: {{ .Release.Namespace }}
         release: {{ .Release.Name }}
     spec:
-      containers:
+      initContainers:
         - name: db
+          nodeName: k8s-app
           image: postgres:13-alpine
           ports:
           - containerPort: {{.Values.db.containerPort}}
@@ -35,9 +36,10 @@ spec:
               value: {{.Values.env.POSTGRES_PASSWORD}}
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
-              name: tutorial-data
+              name: tutorial-volume
 
         - name: app
+          nodeName: k8s-app
           image: dobry33/pg-docker-tutorial:1.0
           ports:
           - containerPort: {{.Values.app.containerPort}}
@@ -50,16 +52,16 @@ spec:
               value: {{.Values.env.DB_USER}}
             - name: DB_PASS
               value: {{.Values.env.DB_PASS}}
-          args: ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:{{.Values.containerPort}}"]
+          args: ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:3003"]
             
-          volumeMounts:
-            - mountPath: /app
-              name: tutorial-data
+          #volumeMounts:
+          #  - mountPath: /app
+          #    name: app-volume
 
       volumes:
-        - name: tutorial-data
+        - name: tutorial-volume
           persistentVolumeClaim:
-            claimName: tutorial-volume
-        - name: app-data
-          persistentVolumeClaim:
-            claimName: app-volume
+            claimName: tutorial-pvc
+        #- name: app-volume
+        #  persistentVolumeClaim:
+        #    claimName: app-pvc

@@ -6,7 +6,7 @@ terraform {
     }
   }
   backend "local" {
-    path = "/home/alex/SkillFactory/Diplom_project/terraform/infrastructure.tfstate"
+    path = "infrastructure.tfstate"
   }
 }
 provider "yandex" {
@@ -44,7 +44,7 @@ resource "yandex_compute_instance" "k8s-master" {
     nat = true
   }
   metadata = {
-    ssh-keys = "ubuntu:${file("~/SkillFactory/Diplom_project/.ssh/k8s-master.pub")}"
+    ssh-keys = "ubuntu:${file("../.ssh/k8s-master.pub")}"
   }
 }
 
@@ -66,7 +66,7 @@ resource "yandex_compute_instance" "k8s-app" {
     nat = true
   }
   metadata = {
-    ssh-keys = "ubuntu:${file("~/SkillFactory/Diplom_project/.ssh/k8s-app.pub")}"
+    ssh-keys = "ubuntu:${file("../.ssh/k8s-app.pub")}"
   }
 }
 
@@ -88,7 +88,7 @@ resource "yandex_compute_instance" "srv" {
     nat = true
   }
   metadata = {
-    ssh-keys = "ubuntu:${file("~/SkillFactory/Diplom_project/.ssh/srv.pub")}"
+    ssh-keys = "ubuntu:${file("../.ssh/srv.pub")}"
   }
 }
 
@@ -96,7 +96,7 @@ resource "yandex_compute_instance" "srv" {
 
 ## Генерируем шаблон
 #data "template_file" "ansible_inventory" {
-#  template = file("~/SkillFactory/Diplom_project/ansible/inventory.ini.tpl") # Путь до шаблона на локальном компьютере
+#  template = file("../ansible/inventory.ini.tpl") # Путь до шаблона на локальном компьютере
 #  vars = {
 #    k8s-master_ip  = var.external_ip_address_k8s-master #external_ip_address_k8s-master
 #    k8s-app_ip = var.external_ip_address_k8s-app

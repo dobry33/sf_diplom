@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  #labels:
+  #  app: {{ .Release.Name }}
+  #  component: {{ .Release.Namespace }}
+  #  release: {{ .Release.Name }}
+  name: app-pvc
+  namespace: {{ .Release.Namespace }}
+spec:
+  
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi
+status: {}
