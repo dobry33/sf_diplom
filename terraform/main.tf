@@ -91,26 +91,3 @@ resource "yandex_compute_instance" "srv" {
     ssh-keys = "ubuntu:${file("../.ssh/srv.pub")}"
   }
 }
-
-
-
-## Генерируем шаблон
-#data "template_file" "ansible_inventory" {
-#  template = file("../ansible/inventory.ini.tpl") # Путь до шаблона на локальном компьютере
-#  vars = {
-#    k8s-master_ip  = var.external_ip_address_k8s-master #external_ip_address_k8s-master
-#    k8s-app_ip = var.external_ip_address_k8s-app
-#    srv_ip = var.external_ip_address_srv
-#  }
-#  depends_on = [ yandex_compute_instance.k8s-app, yandex_compute_instance.k8s-master, yandex_compute_instance.srv ]
-#}
-#
-## Записываем сгенерированный шаблон в файл
-#resource "null_resource" "update_inventory" {
-#  triggers = { # Код будет выполнен, когда inventory будет сгенерирован
-#    template = data.template_file.ansible_inventory.rendered
-#  }
-#  provisioner "local-exec" { # выполняем команду на локальной машине
-#    command = "echo '${data.template_file.ansible_inventory.rendered}' > inventory.ini"
-#  }
-#}
