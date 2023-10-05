@@ -21,7 +21,7 @@ spec:
         component: {{ .Release.Namespace }}
         release: {{ .Release.Name }}
     spec:
-      initContainers:
+      containers:
         - name: db
           nodeName: k8s-app
           image: postgres:13-alpine
@@ -37,6 +37,13 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: tutorial-volume
+
+          readinessProbe:
+            exec:
+              command: ["psql", "-w","-U", "{{.Values.env.POSTGRES_USER}}", "-d","{{.Values.env.POSTGRES_DB}}","-c", "SELECT 1"]
+            InitialsDelaySeconds: 10
+            failureThreshold: 1
+            periodSeconds: 10
 
         - name: app
           nodeName: k8s-app
@@ -54,14 +61,14 @@ spec:
               value: {{.Values.env.DB_PASS}}
           args: ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:3003"]
             
-          #volumeMounts:
-          #  - mountPath: /app
-          #    name: app-volume
+          volumeMounts:
+            - mountPath: /app
+              name: app-volume
 
       volumes:
         - name: tutorial-volume
           persistentVolumeClaim:
             claimName: tutorial-pvc
-        #- name: app-volume
-        #  persistentVolumeClaim:
-        #    claimName: app-pvc
+        - name: app-volume
+          persistentVolumeClaim:
+            claimName: app-pvc
