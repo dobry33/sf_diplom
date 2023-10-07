@@ -23,3 +23,14 @@
       args:
         chdir: /home/ubuntu
         creates: node_joined.log
+
+- hosts: all 
+  gather_facts: true
+  become: yes
+  tasks:
+    - name: install zabbix agent
+      shell: "docker run --name zabbix-agent -e ZBX_HOSTNAME="{{ansible_hostname}}" -e ZBX_SERVER_HOST="{{ansible_default_ipv4.address}}" --init -d zabbix/zabbix-agent:ol-trunk"
+
+
+
+
